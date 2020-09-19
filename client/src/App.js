@@ -7,32 +7,23 @@ import 'semantic-ui-css/semantic.min.css'
 
 function App() {
   let [name, setName] = useState('');
-  let [inLounge, setInLounge] = useState(false);
 
-  if (inLounge) {
-    return <Lounge/>;
-  }
+  const saveName = (e) => {}
 
   return (
-    <div className="app">
+    <div className='app'>
       <div className="container">
-        <h1>
+        <h1 className='title'>
           vlounge
         </h1>
-        <div className="name-input">
-          <Input
-            size='large'
-            value={name}
-            onChange={(e, {value}) => setName(value)}
-            placeholder='Enter your name to join'
-          />
-          <Button
-            circular
-            size='large'
-            icon='arrow right'
-            onClick={() => setInLounge(true)}
-          />
-        </div>
+        <Input
+          size='large'
+          value={name}
+          onChange={(e, {value}) => setName(value)}
+          onBlur={saveName}
+          placeholder='Enter your name to join'
+          className='name'
+        />
       </div>
     </div>
   );

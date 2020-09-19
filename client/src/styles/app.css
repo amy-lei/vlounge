@@ -1,8 +1,9 @@
 :root {
-  --primary-color: #1A263C;
+  --primary-color: #CC2D6F;
   --secondary-color: #E75A2F;
   --accent-color: #FFBD59;
   --accent-color-dark: #F5AD40;
+  --background-color: #10292E;
   --title-size: 100px;
 }
 
@@ -16,7 +17,7 @@
   width: 100vw;
   height: 100vh;
   position: relative;
-  background-color: var(--primary-color);
+  background-color: var(--background-color);
   overflow: hidden;
 }
 
@@ -30,17 +31,18 @@
   margin: auto;
 }
 
-.container > h1 {
+.title {
   font-size: var(--title-size);
   font-weight: 800;
   font-style: italic;
-  color: var(--secondary-color);
+  color: var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
 }
 
-.name-input .ui.input input{
+.name input{
   background-color: transparent !important;
   border: none;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid transparent;
   border-radius: 0px;
   margin-right: 1rem;
   color: white !important;
@@ -54,6 +56,7 @@
 .ui.button.icon:focus,
 .ui.button.icon:active,
 .ui.button.icon:hover {
+  border-bottom: 1px solid white !important;
   background-color: var(--accent-color-dark);
 }
 
