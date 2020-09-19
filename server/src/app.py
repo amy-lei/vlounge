@@ -65,7 +65,7 @@ a = User("alice")
 
 USERS = [a,]
 
-@socketIo.on("justConnected")
+@socketIo.on("connect")
 def sendPeople():
     json_users = [ user.json_rep() for user in USERS]
     emit("justConnected", json_users, broadcast=True)
@@ -90,19 +90,18 @@ def addUser(name):
 def toggleFlag(name):
     for user in USERS:
         if user.name == name:
-            user.is_flagged = not user.is_flagged
+            toggled_user = user
+            toggled_user.is_flagged = not toggled_user.is_flagged
 
-    # TODO: change this code to reflect USERS is a list
-    user = USERS[name]
     # update flag status in database
     user_in_db = User.query.filter_by(name=name).first()
     if user_in_db:
-        user_in_db.set_is_flagged(user.is_flagged)
+        user_in_db.set_is_flagged(toggled_user.is_flagged)
         db.session.commit()
     else:
         raise Exception(f'From app.py:toggleFlag() No user named {user} ')
     # print("---\n" + user.json_rep() + "\n---\n")
-    emit("updateUser", user.json_rep(), broadcast=True)
+    emit("updateUser", toggled_user.json_rep(), broadcast=True)
     print("sent updateUser")
     print(USERS)
                 
