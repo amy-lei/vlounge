@@ -26,7 +26,9 @@ function UserList(props) {
     const initialName = useMemo(generate_name);
     
     let [isFlagged, setIsFlagged] = useState(false);
-    let [name, setName] = useState(initialName);
+    let [name, setName] = useState(
+        localStorage.getItem('displayName') || initialName
+    );
   
     // when connection is established
     socket.on('connect', () => {
@@ -36,11 +38,11 @@ function UserList(props) {
          
     });
 
-    // TODO: send to api to update everyone else that name has changed
     const saveName = (e) => {
-        //socket.emit("New)
+        localStorage.setItem('displayName', e.target.value);
+        // TODO: send to api to update everyone else that name has changed
     }
-        
+
     // catch changes
     useEffect(() => {
         socket.emit("ToggleFlag", name);
