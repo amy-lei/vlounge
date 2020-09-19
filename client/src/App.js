@@ -15,6 +15,7 @@ let socket = io.connect(`${endpoint}`);
 
 function App() {
   // TODO: change default to false and set when enough people
+  let [allUsers, setAllUsers] = useState([]);
   let [showNotification, setShowNotification] = useState(true);
   let [isFlagged, setIsFlagged] = useState(false);
   let [userList, setUserList] = useState([ 
@@ -52,13 +53,28 @@ function App() {
       localStorage.getItem('displayName') || initialName
   );
 
+  /**
+   * When the user clicks outside of the input, save name into the local storage
+   * and update the database accordingly
+   */
   const saveName = (e) => {
       if (e.target.value === '') {
           setName(initialName);
           return;
       }
-      localStorage.setItem('displayName', e.target.value);
   }
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      const allUsers = await fetch('http://localhost:5000/api/users', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: {name},
+      });
+      setAllUsers(allUsers);
+    }
+    fetchAllUsers();
+  }, []);
 
   useEffect(() => {
     socket.emit("toggleFlag", name);
@@ -66,17 +82,8 @@ function App() {
   }, [isFlagged]);
 
   useEffect(() => {
-    // when connection is established
-    socket.on('connect', () => {
-      console.log("connected");
-      // TODO: tell server to tell everyone else that you joined
-      socket.emit("justConnected");
-      console.log("emit justConnected");
-      socket.emit("newUser", name);
-      console.log("emit newUser");
-      
-    });
-  }, []);
+    socket.on('newUserList', data => console.log(data));
+  });
 
     console.log("final list")
     console.log(userList)
