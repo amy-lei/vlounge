@@ -16,6 +16,7 @@ let socket = io.connect(`${endpoint}`);
 function App() {
   // TODO: change default to false and set when enough people
   let [showNotification, setShowNotification] = useState(true);
+  let [isFlagged, setIsFlagged] = useState(false);
   let [userList, setUserList] = useState([ 
     {name: "test person", is_flagged: false}
   ]);
@@ -36,19 +37,15 @@ function App() {
         for (let i = 0; i < userList.length; i++) {
             var user = userList[i];
             if (user.name == userToUpdate.name) {
-                setUserList((prev_state) => userList[i] = userToUpdate);
+                userList[i] = userToUpdate
+                setUserList(userList);
                 newUser = 0;
             }
         }
         if (newUser == 1) {
-            setUserList((prev_state) => prev_state.push(userToUpdate));
+            setUserList((prev_state) => prev_state.concat([userToUpdate]));
         }
     });
-
-function App() {
-  // TODO: change default to false and set when enough people
-  let [showNotification, setShowNotification] = useState(true);
-  let [isFlagged, setIsFlagged] = useState(false);
 
   const initialName = useMemo(generate_name);
   let [name, setName] = useState(

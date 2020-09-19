@@ -1,9 +1,8 @@
-pl
 import random
 from flask import Flask, request, g
 from flask_socketio import SocketIO, emit
-from user import User
 from flask_sqlalchemy import SQLAlchemy
+# from user import User
 
 app = Flask(__name__)
 
@@ -13,6 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.sqlite3'
 db = SQLAlchemy(app)
 
 class User(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     is_flagged = db.Column(db.Boolean(), default=False)
@@ -22,6 +22,36 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.name
+
+    def __init__(self, name):
+        self.name = name
+        self.is_flagged = False
+
+    def json_rep(self):
+        '''
+        returns string representation of json representation of user
+        '''
+
+        def json_string(s):
+            if type(s) == bool:
+                if s:
+                    return "true"
+                return "false"
+            if type(s) == str:
+                return "\"" + s + "\""
+
+        return "{ " + json_string("name") + ":" + json_string(self.name) + ", " + json_string("is_flagged") + ":" + json_string(self.is_flagged) + "}"
+
+# class User(db.Model):
+    # id = db.Column(db.Integer, primary_key=True)
+    # name = db.Column(db.String(80), unique=True, nullable=False)
+    # is_flagged = db.Column(db.Boolean(), default=False)
+
+    # def set_is_flagged(self, new_state):
+        # self.is_flagged = new_state
+
+    # def __repr__(self):
+        # return '<User %r>' % self.name
 
 
 socketIo = SocketIO(app, cors_allowed_origins="*")
