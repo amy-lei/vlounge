@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import UserList from './components/userlist';
+import Notification from './components/notification';
 
 import './styles/app.css';
 import 'semantic-ui-css/semantic.min.css'
@@ -23,6 +24,9 @@ const FAKE_PEOPLE = [
 //}
 
 function App() {
+  // TODO: change default to false and set when enough people
+  let [showNotification, setShowNotification] = useState(true);
+  let [googleMeetLink, setGoogleMeetLink] = useState('');
 
   return (
     <div className='app'>
@@ -31,6 +35,12 @@ function App() {
           vlounge
         </h1>
         <UserList users={FAKE_PEOPLE}/>
+        { showNotification &&
+          <Notification 
+            link={googleMeetLink} 
+            setShowNotification={setShowNotification}
+          />
+        }
       </div>
     </div>
   );
