@@ -10,7 +10,7 @@ const buttonValues = {
         icon: "flag"
     },
     true: {
-        text: "Back to chillin",
+        text: "Back to chillin'",
         icon: "hand point down"
     },
 };
