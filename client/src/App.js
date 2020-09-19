@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import UserList from './components/userlist';
+import Notification from './components/notification';
 import io from "socket.io-client";
 
 import './styles/app.css';
@@ -24,6 +25,9 @@ const FAKE_PEOPLE = [
 
 
 function App() {
+  // TODO: change default to false and set when enough people
+  let [showNotification, setShowNotification] = useState(true);
+  let [googleMeetLink, setGoogleMeetLink] = useState('');
 
   return (
     <div className='app'>
@@ -32,6 +36,12 @@ function App() {
           vlounge
         </h1>
         <UserList users={FAKE_PEOPLE}/>
+        { showNotification &&
+          <Notification 
+            link={googleMeetLink} 
+            setShowNotification={setShowNotification}
+          />
+        }
       </div>
     </div>
   );
