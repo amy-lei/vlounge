@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import UserList from './components/userlist';
 import Notification from './components/notification';
 import io from "socket.io-client";
+import {generate_name} from './word-list';
+import {Icon, Button, Input} from 'semantic-ui-react';
+import {buttonValues} from './constants';
 
 import './styles/app.css';
 import 'semantic-ui-css/semantic.min.css'
@@ -40,19 +43,43 @@ function App() {
         if (newUser == 1) {
             setUserList((prev_state) => prev_state.push(userToUpdate));
         }
-        console.log("update list of users");
-        console.log(userList)
     });
 
-  // useEffect(() => {
-  //   if (showNotification) {
-  //     const audio = new Audio('./sound.mp3');
-  //     audio
-  //       .play()
-  //       .catch(err => console.log(err))
-  //     console.log('played');
-  //   }
-  // }, [showNotification]);
+function App() {
+  // TODO: change default to false and set when enough people
+  let [showNotification, setShowNotification] = useState(true);
+  let [isFlagged, setIsFlagged] = useState(false);
+
+  const initialName = useMemo(generate_name);
+  let [name, setName] = useState(
+      localStorage.getItem('displayName') || initialName
+  );
+
+  const saveName = (e) => {
+      if (e.target.value === '') {
+          setName(initialName);
+          return;
+      }
+      localStorage.setItem('displayName', e.target.value);
+  }
+
+  useEffect(() => {
+    socket.emit("toggleFlag", name);
+    console.log("emit toggleFlag");
+  }, [isFlagged]);
+
+  useEffect(() => {
+    // when connection is established
+    socket.on('connect', () => {
+      console.log("connected");
+      // TODO: tell server to tell everyone else that you joined
+      socket.emit("justConnected");
+      console.log("emit justConnected");
+      socket.emit("newUser", name);
+      console.log("emit newUser");
+      
+    });
+  }, []);
 
     console.log("final list")
     console.log(userList)
@@ -63,7 +90,31 @@ function App() {
         <h1 className='title'>
           vlounge
         </h1>
-        <UserList users={userList}/>
+        <section className='users-container'>
+          <div className='name-container'>
+            <div>
+              <label>
+                  Display name:
+              </label>
+              <Input
+                  size='big'
+                  value={name}
+                  onChange={(e, {value}) => setName(value)}
+                  onBlur={saveName}
+                  placeholder='Enter your name'
+                  className='name'
+              />
+            </div>    
+            <Button 
+              className='flag-button'
+              onClick={() => setIsFlagged(!isFlagged)}
+            >
+              <Icon name={buttonValues[isFlagged].icon}/>
+              {buttonValues[isFlagged].text}
+            </Button>
+          </div>
+          <UserList users={userList}/>
+        </section>
         { showNotification &&
           <Notification 
             setShowNotification={setShowNotification}
