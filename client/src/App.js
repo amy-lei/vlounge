@@ -10,13 +10,30 @@ import 'semantic-ui-css/semantic.min.css'
 let endpoint = "http://localhost:5000";
 let socket = io.connect(`${endpoint}`);
 
-const USERS = [
-  { name: "alice", is_flagged: false},
+var userList = [
 ];
 
+socket.on("justConnected", (data) => {
+    userList = [];
+    for (var user of data) {
+        userList.push(JSON.parse(user));
+    }
+});
+
 socket.on("updateUser", (data) => {
-    //USERS.push(JSON.parse(data))
-    console.log("test")
+    var userToUpdate = JSON.parse(data);
+    var newUser = 1;
+    for (let i = 0; i < userList.length; i++) {
+        var user = userList[i];
+        if (user.name == userToUpdate.name) {
+            userList[i] = userToUpdate;
+            newUser = 0;
+        }
+    }
+    if (newUser == 1) {
+        userList.push(userToUpdate);
+    }
+    //console.log("test")
 });
 
 function App() {
@@ -39,7 +56,7 @@ function App() {
         <h1 className='title'>
           vlounge
         </h1>
-        <UserList users={USERS}/>
+        <UserList users={userList}/>
         { showNotification &&
           <Notification 
             setShowNotification={setShowNotification}

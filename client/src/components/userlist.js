@@ -9,6 +9,7 @@ import '../styles/users.css'
 let endpoint = "http://localhost:5000";
 let socket = io.connect(`${endpoint}`);
 
+
 const buttonValues = {
     false: {
         text: "Ready to chat!",
@@ -27,8 +28,18 @@ function UserList(props) {
     let [isFlagged, setIsFlagged] = useState(false);
     let [name, setName] = useState(initialName);
   
+    // when connection is established
+    socket.on('connect', () => {
+        console.log("connected");
+        // TODO: tell server to tell everyone else that you joined
+        socket.emit("newUser", name);
+         
+    });
+
     // TODO: send to api to update everyone else that name has changed
-    const saveName = (e) => {}
+    const saveName = (e) => {
+        //socket.emit("New)
+    }
         
     // catch changes
     useEffect(() => {
