@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserList from './components/userlist';
 import Notification from './components/notification';
 import io from "socket.io-client";
@@ -22,7 +22,16 @@ socket.on("updateUser", (data) => {
 function App() {
   // TODO: change default to false and set when enough people
   let [showNotification, setShowNotification] = useState(true);
-  let [googleMeetLink, setGoogleMeetLink] = useState('');
+  
+  // useEffect(() => {
+  //   if (showNotification) {
+  //     const audio = new Audio('./sound.mp3');
+  //     audio
+  //       .play()
+  //       .catch(err => console.log(err))
+  //     console.log('played');
+  //   }
+  // }, [showNotification]);
 
   return (
     <div className='app'>
@@ -33,7 +42,6 @@ function App() {
         <UserList users={FAKE_PEOPLE}/>
         { showNotification &&
           <Notification 
-            link={googleMeetLink} 
             setShowNotification={setShowNotification}
           />
         }

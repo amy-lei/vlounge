@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_socketio import SocketIO, emit
 from user import User
 
@@ -10,6 +10,8 @@ socketIo = SocketIO(app, cors_allowed_origins="*")
 
 app.debug = True
 app.host = 'localhost'
+
+characters = [char for char in string.ascii_lowercase + string.digits]
 
 # database:
 
@@ -29,6 +31,6 @@ def toggleFlag(name):
     print(FAKE_USERS[name])
     emit("updateUser", "test", broadcast=True)
     return None
-
+                
 if __name__ == '__main__':
     socketIo.run(app)
