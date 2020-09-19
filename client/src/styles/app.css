@@ -1,0 +1,62 @@
+:root {
+  --primary-color: #1A263C;
+  --secondary-color: #E75A2F;
+  --accent-color: #FFBD59;
+  --accent-color-dark: #F5AD40;
+  --title-size: 100px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background-color: var(--primary-color);
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 100%;
+  margin: auto;
+}
+
+.container > h1 {
+  font-size: var(--title-size);
+  font-weight: 800;
+  font-style: italic;
+  color: var(--secondary-color);
+}
+
+.name-input .ui.input input{
+  background-color: transparent !important;
+  border: none;
+  border-bottom: 1px solid white;
+  border-radius: 0px;
+  margin-right: 1rem;
+  color: white !important;
+}
+
+.ui.button.icon {
+  background-color: var(--accent-color);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.ui.button.icon:focus,
+.ui.button.icon:active,
+.ui.button.icon:hover {
+  background-color: var(--accent-color-dark);
+}
+
+.ui.button.icon i{
+  color: white;
+}

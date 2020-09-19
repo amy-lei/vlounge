@@ -1,24 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import {Input, Button} from 'semantic-ui-react';
+import Lounge from './components/lounge';
+
+import './styles/app.css';
+import 'semantic-ui-css/semantic.min.css'
 
 function App() {
+  let [name, setName] = useState('');
+  let [inLounge, setInLounge] = useState(false);
+
+  if (inLounge) {
+    return <Lounge/>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="container">
+        <h1>
+          vlounge
+        </h1>
+        <div className="name-input">
+          <Input
+            size='large'
+            value={name}
+            onChange={(e, {value}) => setName(value)}
+            placeholder='Enter your name to join'
+          />
+          <Button
+            circular
+            size='large'
+            icon='arrow right'
+            onClick={() => setInLounge(true)}
+          />
+        </div>
+      </div>
     </div>
   );
 }
