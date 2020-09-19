@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
-import {Input, Button} from 'semantic-ui-react';
-import Lounge from './components/lounge';
+import React, {useState, useMemo} from 'react';
+import {Input} from 'semantic-ui-react';
+import UserList from './components/userlist';
+import {generate_name} from './word-list';
 import io from "socket.io-client";
 
 import './styles/app.css';
@@ -10,9 +11,25 @@ import 'semantic-ui-css/semantic.min.css'
 let endpoint = "http://localhost:5000";
 let socket = io.connect(`${endpoint}`);
 
-function App() {
-  let [name, setName] = useState('');
+const FAKE_PEOPLE = [
+  { name: "Amy Lei", is_flagged: false},
+  { name: "Amy Lei", is_flagged: true},
+  { name: "Amy Lei", is_flagged: false},
+  { name: "Amy Lei", is_flagged: false},
+  { name: "Amy Lei", is_flagged: false},
+  { name: "Amy Lei", is_flagged: true},
+  { name: "Amy Lei", is_flagged: true},
+  { name: "Amy Lei", is_flagged: false},
+  { name: "Amy Lei", is_flagged: true},
+  { name: "Amy Lei", is_flagged: false},
+];
 
+
+function App() {
+  const initialName = useMemo(generate_name);
+  let [name, setName] = useState(initialName);
+
+  // TODO: send to api to update everyone else that name has changed
   const saveName = (e) => {}
 
   return (
@@ -21,14 +38,18 @@ function App() {
         <h1 className='title'>
           vlounge
         </h1>
+        <label>
+          Display name:
+        </label>
         <Input
-          size='large'
+          size='big'
           value={name}
           onChange={(e, {value}) => setName(value)}
           onBlur={saveName}
-          placeholder='Enter your name to join'
+          placeholder='Enter your name'
           className='name'
         />
+        <UserList users={FAKE_PEOPLE}/>
       </div>
     </div>
   );

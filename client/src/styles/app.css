@@ -1,9 +1,12 @@
 :root {
   --primary-color: #CC2D6F;
   --secondary-color: #E75A2F;
-  --accent-color: #FFBD59;
+  --accent-color: #B8D215;
   --accent-color-dark: #F5AD40;
-  --background-color: #10292E;
+  --background-color: #12282D;
+  --background-color-light: #183439;
+  --background-color-dark: #051C21;
+  --font-color: #587B83;
   --title-size: 100px;
 }
 
@@ -11,6 +14,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  color: var(--font-color);
 }
 
 .app {
@@ -37,29 +41,23 @@
   font-style: italic;
   color: var(--primary-color);
   text-shadow: 0 0 10px var(--primary-color);
+  margin-bottom: 0;
 }
 
 .name input{
+  width: inherit;
   background-color: transparent !important;
-  border: none;
-  border-bottom: 1px solid transparent;
-  border-radius: 0px;
   margin-right: 1rem;
-  color: white !important;
+  color: var(--font-color) !important;
+  text-align: center !important;
 }
 
-.ui.button.icon {
-  background-color: var(--accent-color);
-  transition: background-color 0.2s ease-in-out;
+.name input:focus,
+.name input:active,
+.name input:hover {
+  border-color: var(--font-color) !important;
 }
 
-.ui.button.icon:focus,
-.ui.button.icon:active,
-.ui.button.icon:hover {
-  border-bottom: 1px solid white !important;
-  background-color: var(--accent-color-dark);
-}
-
-.ui.button.icon i{
-  color: white;
+label {
+  opacity: 0.75;
 }
