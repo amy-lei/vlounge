@@ -30,6 +30,10 @@ function UserList(props) {
     );
   
     const saveName = (e) => {
+        if (e.target.value === '') {
+            setName(initialName);
+            return;
+        }
         localStorage.setItem('displayName', e.target.value);
         // TODO: send to api to update everyone else that name has changed
     }
