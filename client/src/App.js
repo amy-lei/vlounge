@@ -13,36 +13,40 @@ import 'semantic-ui-css/semantic.min.css'
 let endpoint = "http://localhost:5000";
 let socket = io.connect(`${endpoint}`);
 
-var userList = [
-];
-
-socket.on("justConnected", (data) => {
-    userList = [];
-    for (var user of data) {
-        userList.push(JSON.parse(user));
-    }
-});
-
-socket.on("updateUser", (data) => {
-    var userToUpdate = JSON.parse(data);
-    var newUser = 1;
-    for (let i = 0; i < userList.length; i++) {
-        var user = userList[i];
-        if (user.name == userToUpdate.name) {
-            userList[i] = userToUpdate;
-            newUser = 0;
-        }
-    }
-    if (newUser == 1) {
-        userList.push(userToUpdate);
-    }
-});
-
 function App() {
   // TODO: change default to false and set when enough people
   let [allUsers, setAllUsers] = useState([]);
   let [showNotification, setShowNotification] = useState(true);
   let [isFlagged, setIsFlagged] = useState(false);
+  let [userList, setUserList] = useState([ 
+    {name: "test person", is_flagged: false}
+  ]);
+
+    socket.on("justConnected", (data) => {
+        var tempList = [];
+        for (var user of data) {
+            tempList.push(JSON.parse(user));
+        }
+        setUserList(tempList);
+        console.log("got list of users");
+        console.log(userList);
+    });
+
+    socket.on("updateUser", (data) => {
+        var userToUpdate = JSON.parse(data);
+        var newUser = 1;
+        for (let i = 0; i < userList.length; i++) {
+            var user = userList[i];
+            if (user.name == userToUpdate.name) {
+                userList[i] = userToUpdate
+                setUserList(userList);
+                newUser = 0;
+            }
+        }
+        if (newUser == 1) {
+            setUserList((prev_state) => prev_state.concat([userToUpdate]));
+        }
+    });
 
   const initialName = useMemo(generate_name);
   let [name, setName] = useState(
@@ -80,6 +84,9 @@ function App() {
   useEffect(() => {
     socket.on('newUserList', data => console.log(data));
   });
+
+    console.log("final list")
+    console.log(userList)
 
   return (
     <div className='app'>

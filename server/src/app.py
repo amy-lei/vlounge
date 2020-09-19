@@ -6,6 +6,7 @@ from flask_cors import CORS, cross_origin
 import random
 import string
 import json
+# from user import User
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -17,6 +18,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 db = SQLAlchemy(app)
 
 class User(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     is_flagged = db.Column(db.Boolean(), default=False)
@@ -31,6 +33,36 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.name
 
+    def __init__(self, name):
+        self.name = name
+        self.is_flagged = False
+
+    def json_rep(self):
+        '''
+        returns string representation of json representation of user
+        '''
+
+        def json_string(s):
+            if type(s) == bool:
+                if s:
+                    return "true"
+                return "false"
+            if type(s) == str:
+                return "\"" + s + "\""
+
+        return "{ " + json_string("name") + ":" + json_string(self.name) + ", " + json_string("is_flagged") + ":" + json_string(self.is_flagged) + "}"
+
+# class User(db.Model):
+    # id = db.Column(db.Integer, primary_key=True)
+    # name = db.Column(db.String(80), unique=True, nullable=False)
+    # is_flagged = db.Column(db.Boolean(), default=False)
+
+    # def set_is_flagged(self, new_state):
+        # self.is_flagged = new_state
+
+    # def __repr__(self):
+        # return '<User %r>' % self.name
+
 
 socketIo = SocketIO(app, cors_allowed_origins="*")
 
@@ -39,28 +71,38 @@ app.host = 'localhost'
 
 # database:
 
-USERS = {}
+a = User("alice")
+
+USERS = [a,]
 
 @socketIo.on("justConnected")
 def sendPeople():
-    json_users = [ user.json_rep() for user in USERS.values()]
+    json_users = [ user.json_rep() for user in USERS]
     emit("justConnected", json_users, broadcast=True)
     print("sent justConnected")
+    print(USERS)
 
 @socketIo.on("newUser")
 def addUser(name):
+    print("recieve new user")
     # update official list of users
     new_user = User(name)
-    USERS[name] = new_user
+    USERS.append(new_user)
     # tell others to update thier list
     emit("updateUser", new_user.json_rep(), broadcast=True)
     # add user to database
     db.session.add(new_user)
     db.session.commit()
     print("sent updateUser")
+    print(USERS)
 
 @socketIo.on("toggleFlag")
 def toggleFlag(name):
+    for user in USERS:
+        if user.name == name:
+            user.is_flagged = not user.is_flagged
+
+    # TODO: change this code to reflect USERS is a list
     user = USERS[name]
     # update flag status in database
     user_in_db = User.query.filter_by(name=name).first()
@@ -94,7 +136,6 @@ def initialize():
         emit('newUserList', all_users, broadcast=True)
         return json.dumps({'allUsers': all_users, 'name': name})
     return {}, 200
-    
    
 if __name__ == '__main__':
     socketIo.run(app)
