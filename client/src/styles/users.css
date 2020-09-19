@@ -1,0 +1,20 @@
+.users {
+    width: max(70%, 40rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background-color: var(--background-color-dark);
+    margin: 1.5rem 0 1rem 0;
+    padding: 1.5rem;
+}
+
+.user {
+    width: 25%;
+    height: 2rem;
+    padding: 0.25rem 1.25rem;
+}
+
+.user-icon.flagged {
+    color: var(--accent-color);
+}
