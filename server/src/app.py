@@ -11,7 +11,7 @@ socketIo = SocketIO(app, cors_allowed_origins="*")
 app.debug = True
 app.host = 'localhost'
 
-characters = [char for char in string.ascii_lowercase + string.digits]
+# characters = [char for char in string.ascii_lowercase + string.digits]
 
 # database:
 
@@ -19,7 +19,7 @@ Alice = User("alice")
 Bob = User("bob")
 Carl = User("carl")
 
-FAKE_USERS = {
+USERS = {
     "alice" : Alice,
     "bob" : Bob,
     "carl" : Carl
@@ -27,10 +27,10 @@ FAKE_USERS = {
 
 @socketIo.on("ToggleFlag")
 def toggleFlag(name):
-    FAKE_USERS[name].is_flagged = not FAKE_USERS[name].is_flagged
-    print(FAKE_USERS[name])
-    emit("updateUser", "test", broadcast=True)
-    return None
+    user = USERS[name]
+    user.is_flagged = not user.is_flagged
+    print("---\n" + user.json_rep() + "\n---\n")
+    emit("updateUser", user.json_rep(), broadcast=True)
                 
 if __name__ == '__main__':
     socketIo.run(app)

@@ -10,12 +10,12 @@ import 'semantic-ui-css/semantic.min.css'
 let endpoint = "http://localhost:5000";
 let socket = io.connect(`${endpoint}`);
 
-const FAKE_PEOPLE = [
+const USERS = [
   { name: "alice", is_flagged: false},
 ];
 
 socket.on("updateUser", (data) => {
-    //FAKE_PEOPLE.push({name: "test_person", is_flagged: false})
+    //USERS.push(JSON.parse(data))
     console.log("test")
 });
 
@@ -39,7 +39,7 @@ function App() {
         <h1 className='title'>
           vlounge
         </h1>
-        <UserList users={FAKE_PEOPLE}/>
+        <UserList users={USERS}/>
         { showNotification &&
           <Notification 
             setShowNotification={setShowNotification}
