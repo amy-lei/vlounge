@@ -1,8 +1,13 @@
-import React, {useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {Icon, Button, Input} from 'semantic-ui-react';
 import {generate_name} from '../word-list';
+import io from "socket.io-client";
 
 import '../styles/users.css'
+
+// connecting to server
+let endpoint = "http://localhost:5000";
+let socket = io.connect(`${endpoint}`);
 
 const buttonValues = {
     false: {
@@ -24,9 +29,15 @@ function UserList(props) {
   
     // TODO: send to api to update everyone else that name has changed
     const saveName = (e) => {}
+        
+    // catch changes
+    useEffect(() => {
+        socket.emit("ToggleFlag", name);
+    }, [isFlagged]);
 
     const renderedUsers = users.map(user => <User {...user}/>)
     return (
+
         <section className='users-container'>
             <div className='name-container'>
                 <div>

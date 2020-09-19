@@ -1,13 +1,9 @@
 import React from 'react';
 import UserList from './components/userlist';
-import io from "socket.io-client";
 
 import './styles/app.css';
 import 'semantic-ui-css/semantic.min.css'
 
-// connecting to server
-let endpoint = "http://localhost:5000";
-let socket = io.connect(`${endpoint}`);
 
 const FAKE_PEOPLE = [
   { name: "Amy Lei", is_flagged: false},
@@ -22,6 +18,9 @@ const FAKE_PEOPLE = [
   { name: "Amy Lei", is_flagged: false},
 ];
 
+//const onClick = () => {
+    //socket.emit("test", "hello")
+//}
 
 function App() {
 

@@ -10,10 +10,11 @@ socketIo = SocketIO(app, cors_allowed_origins="*")
 app.debug = True
 app.host = 'localhost'
 
+# database:
 
-@socketIo.on("test")
+@socketIo.on("ToggleFlag")
 def test(msg):
-    print(msg)
+    print(msg + " has toggled thier flag")
     return None
 
 if __name__ == '__main__':
