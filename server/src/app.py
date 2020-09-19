@@ -1,3 +1,4 @@
+import random
 from flask import Flask, request, g
 from flask_socketio import SocketIO, emit
 from user import User
@@ -27,27 +28,30 @@ app.host = 'localhost'
 
 # database:
 
-Alice = User("alice")
-
 USERS = {}
 
 @socketIo.on("justConnected")
-def sendPeople(name):
+def sendPeople():
     json_users = [ user.json_rep() for user in USERS.values()]
     emit("justConnected", json_users, broadcast=True)
+    print("sent justConnected")
 
 @socketIo.on("newUser")
 def addUser(name):
+    # update official list of users
     new_user = User(name)
     USERS[name] = new_user
+    # tell others to update thier list
     emit("updateUser", new_user.json_rep(), broadcast=True)
+    print("sent updateUser")
 
-@socketIo.on("ToggleFlag")
+@socketIo.on("toggleFlag")
 def toggleFlag(name):
     user = USERS[name]
     user.is_flagged = not user.is_flagged
     # print("---\n" + user.json_rep() + "\n---\n")
     emit("updateUser", user.json_rep(), broadcast=True)
+    print("sent updateUser")
                 
 if __name__ == '__main__':
     socketIo.run(app)

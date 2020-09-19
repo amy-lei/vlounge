@@ -21,6 +21,20 @@ const buttonValues = {
     },
 };
 
+var name = Math.floor((Math.random() * 100) + 1).toString()
+
+// when connection is established
+socket.on('connect', () => {
+    console.log("connected");
+    // TODO: tell server to tell everyone else that you joined
+    socket.emit("justConnected");
+    console.log("emit justConnected");
+    socket.emit("newUser", name);
+    console.log("emit newUser");
+     
+});
+
+
 function UserList(props) {
     const {users} = props;
     const initialName = useMemo(generate_name);
@@ -30,13 +44,6 @@ function UserList(props) {
         localStorage.getItem('displayName') || initialName
     );
   
-    // when connection is established
-    socket.on('connect', () => {
-        console.log("connected");
-        // TODO: tell server to tell everyone else that you joined
-        socket.emit("newUser", name);
-         
-    });
 
     const saveName = (e) => {
         if (e.target.value === '') {
@@ -49,7 +56,8 @@ function UserList(props) {
 
     // catch changes
     useEffect(() => {
-        socket.emit("ToggleFlag", name);
+        socket.emit("toggleFlag", name);
+        console.log("emit toggleFlag");
     }, [isFlagged]);
 
     const renderedUsers = users.map(user => <User {...user}/>)
