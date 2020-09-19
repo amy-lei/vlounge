@@ -1,11 +1,19 @@
-.users {
+.users-container {
     width: max(70%, 40rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.users {
+    width:100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
     background-color: var(--background-color-dark);
-    margin: 1.5rem 0 1rem 0;
+    margin: 0.5rem 0 1rem 0;
     padding: 1.5rem;
 }
 
@@ -17,4 +25,35 @@
 
 .user-icon.flagged {
     color: var(--accent-color);
+}
+
+.flag-button {
+    color: var(--font-color) !important;
+    border-radius: 50rem !important;
+    background-color: var(--background-color-dark) !important;
+}
+
+.name-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.name input{
+    width: inherit;
+    background-color: transparent !important;
+    margin-right: 1rem;
+    color: var(--font-color) !important;
+  }
+  
+.name input:focus,
+.name input:active,
+.name input:hover {
+    border-color: var(--font-color) !important;
+}
+
+label {
+    opacity: 0.75;
 }

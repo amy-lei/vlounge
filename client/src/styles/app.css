@@ -43,21 +43,3 @@
   text-shadow: 0 0 10px var(--primary-color);
   margin-bottom: 0;
 }
-
-.name input{
-  width: inherit;
-  background-color: transparent !important;
-  margin-right: 1rem;
-  color: var(--font-color) !important;
-  text-align: center !important;
-}
-
-.name input:focus,
-.name input:active,
-.name input:hover {
-  border-color: var(--font-color) !important;
-}
-
-label {
-  opacity: 0.75;
-}
