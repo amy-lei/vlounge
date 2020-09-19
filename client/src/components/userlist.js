@@ -21,18 +21,7 @@ const buttonValues = {
     },
 };
 
-var name = Math.floor((Math.random() * 100) + 1).toString()
-
-// when connection is established
-socket.on('connect', () => {
-    console.log("connected");
-    // TODO: tell server to tell everyone else that you joined
-    socket.emit("justConnected");
-    console.log("emit justConnected");
-    socket.emit("newUser", name);
-    console.log("emit newUser");
-     
-});
+//var name = Math.floor((Math.random() * 100) + 1).toString()
 
 
 function UserList(props) {
@@ -44,6 +33,17 @@ function UserList(props) {
         localStorage.getItem('displayName') || initialName
     );
   
+    // when connection is established
+    socket.on('connect', () => {
+        console.log("connected");
+        // TODO: tell server to tell everyone else that you joined
+        socket.emit("justConnected");
+        console.log("emit justConnected");
+        socket.emit("newUser", name);
+        console.log("emit newUser");
+         
+    });
+
 
     const saveName = (e) => {
         localStorage.setItem('displayName', e.target.value);

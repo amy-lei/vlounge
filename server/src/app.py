@@ -28,30 +28,37 @@ app.host = 'localhost'
 
 # database:
 
-USERS = {}
+a = User("alice")
+
+USERS = [a,]
 
 @socketIo.on("justConnected")
 def sendPeople():
-    json_users = [ user.json_rep() for user in USERS.values()]
+    json_users = [ user.json_rep() for user in USERS]
     emit("justConnected", json_users, broadcast=True)
     print("sent justConnected")
+    print(USERS)
 
 @socketIo.on("newUser")
 def addUser(name):
+    print("recieve new user")
     # update official list of users
     new_user = User(name)
-    USERS[name] = new_user
+    USERS.append(new_user)
     # tell others to update thier list
     emit("updateUser", new_user.json_rep(), broadcast=True)
     print("sent updateUser")
+    print(USERS)
 
 @socketIo.on("toggleFlag")
 def toggleFlag(name):
-    user = USERS[name]
-    user.is_flagged = not user.is_flagged
-    # print("---\n" + user.json_rep() + "\n---\n")
+    for user in USERS:
+        if user.name == name:
+            user.is_flagged = not user.is_flagged
+
     emit("updateUser", user.json_rep(), broadcast=True)
     print("sent updateUser")
+    print(USERS)
                 
 if __name__ == '__main__':
     socketIo.run(app)
