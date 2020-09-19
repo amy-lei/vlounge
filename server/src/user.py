@@ -13,6 +13,11 @@ class User():
         '''
 
         def json_string(s):
-            return "\"" + s + "\""
+            if type(s) == bool:
+                if s:
+                    return "true"
+                return "false"
+            if type(s) == str:
+                return "\"" + s + "\""
 
-        return "{" + json_string("name") + ":" + json_string(self.name) + "," + json_string("is_flagged") + ":" + str(self.is_flagged) + "}"
+        return "{ " + json_string("name") + ":" + json_string(self.name) + ", " + json_string("is_flagged") + ":" + json_string(self.is_flagged) + "}"
