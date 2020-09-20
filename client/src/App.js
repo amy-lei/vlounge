@@ -23,31 +23,6 @@ function App() {
     {name: "test person", is_flagged: false}
   ]);
 
-    socket.on("justConnected", (data) => {
-        var tempList = [];
-        for (var user of data) {
-            tempList.push(JSON.parse(user));
-        }
-        setUserList(tempList);
-        console.log("got list of users");
-        console.log(userList);
-    });
-
-    socket.on("updateUser", (data) => {
-        var userToUpdate = JSON.parse(data);
-        var newUser = 1;
-        for (let i = 0; i < userList.length; i++) {
-            var user = userList[i];
-            if (user.name == userToUpdate.name) {
-                userList[i] = userToUpdate
-                setUserList(userList);
-                newUser = 0;
-            }
-        }
-        if (newUser == 1) {
-            setUserList((prev_state) => prev_state.concat([userToUpdate]));
-        }
-    });
 
   const initialName = useMemo(generate_name);
   let [name, setName] = useState(
@@ -82,14 +57,16 @@ function App() {
   useEffect(() => {
     socket.emit("toggleFlag", name);
     console.log("emit toggleFlag");
+    console.log(name);
   }, [isFlagged]);
 
   useEffect(() => {
     socket.on('newUser', data => console.log(data));
+    socket.on('updateUsers', data => console.log(data));
   });
 
-    console.log("final list")
-    console.log(userList)
+    //console.log("final list")
+    //console.log(userList)
 
   return (
     <div className='app'>
