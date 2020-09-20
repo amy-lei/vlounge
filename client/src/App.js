@@ -78,6 +78,9 @@ function App() {
     socket.on('updateUsers', allUsers => {
       setUserList(allUsers);
     });
+  //   socket.on('newUser', data => updateUsers(data));
+  //   socket.on('updateUsers', data => updateUsers(data));
+  //   socket.on('makeRoom', data => console.log(data));
 
     socket.on('userLeft', username => {
       const updatedList = userList.filter(u => u.name !== username);
