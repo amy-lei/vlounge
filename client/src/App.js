@@ -85,7 +85,7 @@ function App() {
   }
 
   /**
-   * Update userlist when someone flags, changes name or leaves
+   * Update userlist, hearts, when someone flags, changes name, leaves or leaves hearts
    */
   useEffect(() => {
     socket.on('updateUsers', allUsers => {
@@ -101,6 +101,8 @@ function App() {
       const updatedList = userList.filter(u => u.name !== username);
       setUserList(updatedList);
     });
+
+    socket.on('updateHearts', numHearts => {console.log(numHearts)});
   });
 
   return (

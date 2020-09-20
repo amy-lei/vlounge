@@ -64,4 +64,14 @@ router.post('/name', async (req, res) => {
     }
 });
 
+router.post('/hearts', async (req, res) => {
+    try {
+        let numHearts = req.body.numHearts;
+        socket.getIo().sockets.emit('updateHearts', allUsers);
+        res.send({numHearts});
+    } catch (err) {
+        console.log(`error from accessing hearts: ${err}`);
+    }
+});
+
 module.exports = router;
