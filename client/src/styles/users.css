@@ -37,6 +37,21 @@
     background-color: var(--background-color-dark) !important;
 }
 
+.flag-button:focus,
+.flag-button:hover {
+    background-color: var(--background-color-dark-hover) !important;
+}
+
+.flag-button.outline {
+    border: 1px solid var(--font-color) !important;
+    background-color: var(--background-color) !important;
+}
+
+.flag-button.outline:hover {
+    border: 1px solid var(--font-color) !important;
+    background-color: var(--background-color-light) !important;
+}
+
 .name-container {
     width: 100%;
     display: flex;

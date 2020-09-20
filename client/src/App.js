@@ -125,7 +125,7 @@ function App() {
               />
             </div>    
             <Button 
-              className='flag-button'
+              className={`flag-button ${isFlagged ? 'outline':''}`}
               onClick={toggleFlag}
             >
               <Icon name={buttonValues[isFlagged].icon}/>
