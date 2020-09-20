@@ -2,6 +2,7 @@ const express = require('express');
 const { Socket } = require('socket.io-client');
 const router = express.Router();
 const User = require("./User");
+const Room = require('./Room');
 const socket = require("./server-socket");
 
 router.post('/users', async (req, res) => {
@@ -67,7 +68,10 @@ router.post('/name', async (req, res) => {
 router.post('/hearts', async (req, res) => {
     try {
         let numHearts = req.body.numHearts;
-        socket.getIo().sockets.emit('updateHearts', allUsers);
+        const r = await Room.findOne();
+        r.numHearts = r.numHearts + numHearts; 
+        const newRoom = await r.save();
+        socket.getIo().sockets.emit('updateHearts', newRoom.numHearts);
         res.send({numHearts});
     } catch (err) {
         console.log(`error from accessing hearts: ${err}`);

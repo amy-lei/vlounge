@@ -29,13 +29,20 @@ function App() {
   let [numHearts, setNumHearts] = useState(0);
   let [inputTimer, setInputTimer] = useState(null);
 
-  const heartReact = async () => {
+  const heartReact = () => {
     const delay = 3000;
     setCount(count + 1);
     setNumHearts(numHearts + 1);
     clearTimeout(inputTimer);
-    setInputTimer(setTimeout(()=>{
-      console.log(`You hearted ${count} times!`);
+    setInputTimer(setTimeout(async()=>{
+      const body = {numHearts};
+      const res = await fetch('http://localhost:5000/api/hearts', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+      });
+      console.log(`Added ${count} hearts!`)
+      const newNum = await res.json();
       setCount(0);
   }, delay));
   }
@@ -116,7 +123,7 @@ function App() {
       setUserList(updatedList);
     });
 
-    socket.on('updateHearts', numHearts => {console.log(numHearts)});
+    socket.on('updateHearts', numHearts => setNumHearts(numHearts));
   });
 
   return (

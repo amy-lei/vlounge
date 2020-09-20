@@ -6,6 +6,7 @@ const cors = require('cors');
 const api = require('./api.js');
 const socket = require('./server-socket');
 const User = require('./User.js');
+const Room = require('./Room.js');
 require("dotenv").config();
 
 const app = express();
@@ -46,6 +47,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/clear-db', async (req, res) => {
+    const r = await Room.find();
+    if (r.length === 0) {
+        console.log('created new room');
+        const newRoom = new Room();
+        await newRoom.save();
+    }
     await User.deleteMany();
     res.send("Deleted db");
 });
