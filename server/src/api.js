@@ -18,7 +18,7 @@ router.post('/users', async (req, res) => {
         const allUsers = await User.find();
         console.log(req.body)
         socket.addUser(req.body.socketId, name);
-        socket.getIo().emit('newUser', {user: u, allUsers});
+        socket.getIo().emit('newUser', allUsers);
         res.send({name, allUsers});
     } catch (err) {
         console.log(err);

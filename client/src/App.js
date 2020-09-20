@@ -62,19 +62,9 @@ function App() {
     console.log(name);
   }, [isFlagged]);
 
-  async function updateUsers1(data){
-      console.log(data)
-      allUsers = data.allUsers
-      var updatedList = [];
-      for (var user of allUsers) {
-        updatedList.push(user);
-      }
-      setUserList(updatedList);
-  }
 
-  async function updateUsers2(data){
-      console.log(data)
-      allUsers = data
+  async function updateUsers(allUsers){
+      console.log(allUsers)
       var updatedList = [];
       for (var user of allUsers) {
         updatedList.push(user);
@@ -84,8 +74,9 @@ function App() {
 
 
   useEffect(() => {
-    socket.on('newUser', data => updateUsers1(data));
-    socket.on('updateUsers', data => updateUsers2(data));
+    socket.on('newUser', data => updateUsers(data));
+    socket.on('updateUsers', data => updateUsers(data));
+    socket.on('makeRoom', data => console.log(data));
   });
 
     //console.log("final list")
