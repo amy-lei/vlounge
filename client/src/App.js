@@ -20,7 +20,7 @@ function App() {
   let [showNotification, setShowNotification] = useState(true);
   let [isFlagged, setIsFlagged] = useState(false);
   let [userList, setUserList] = useState([ 
-    {name: "test person", is_flagged: false}
+    //{name: "test person", is_flagged: false}
   ]);
 
   const initialName = useMemo(generate_name);
@@ -62,9 +62,30 @@ function App() {
     console.log(name);
   }, [isFlagged]);
 
+  async function updateUsers1(data){
+      console.log(data)
+      allUsers = data.allUsers
+      var updatedList = [];
+      for (var user of allUsers) {
+        updatedList.push(user);
+      }
+      setUserList(updatedList);
+  }
+
+  async function updateUsers2(data){
+      console.log(data)
+      allUsers = data
+      var updatedList = [];
+      for (var user of allUsers) {
+        updatedList.push(user);
+      }
+      setUserList(updatedList);
+  }
+
+
   useEffect(() => {
-    socket.on('newUser', data => console.log(data));
-    socket.on('updateUsers', data => console.log(data));
+    socket.on('newUser', data => updateUsers1(data));
+    socket.on('updateUsers', data => updateUsers2(data));
   });
 
     //console.log("final list")
