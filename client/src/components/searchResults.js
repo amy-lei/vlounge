@@ -6,7 +6,7 @@ function SearchResults(props) {
     let {index, setIndex} = props;
     console.log(RESULTS);
     return (
-        <div>
+        <div className='search-result-container'>
         {RESULTS.map((v, i) =>
             <div 
               className={`search-result ${i === index ? 'active':''}`}

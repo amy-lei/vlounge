@@ -53,12 +53,12 @@ function PlaylistModal() {
 
     return (
         <Modal
+            size='small'
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
             open={open}
-            trigger={<Button>Add to playlist</Button>}
+            trigger={<Button className='btn outline' floated='right'>Add to playlist</Button>}
         >
-          <Modal.Header>Add to Playlist</Modal.Header>
           <Modal.Content>
             <form>
               <Input placeholder="Search on YouTube..."
@@ -76,13 +76,15 @@ function PlaylistModal() {
           </Modal.Content>
           <Modal.Actions>
             <Button color='black'
+                    className='btn'
                     onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button
                 content="Add"
+                className='btn'
                 labelPosition='right'
-                icon='checkmark'
+                icon='plus'
                 onClick={() => setOpen(false)}
                 positive
                 disabled={!readySubmit}
