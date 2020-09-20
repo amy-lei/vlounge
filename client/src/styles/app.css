@@ -6,6 +6,7 @@
   --background-color: #12282D;
   --background-color-light: #173137;
   --background-color-dark: #051C21;
+  --background-color-dark-hover: #062025;
   --font-color: #587B83;
   --title-size: 100px;
 }
@@ -19,7 +20,7 @@
 
 .app {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
   background-color: var(--background-color);
   overflow: hidden;
@@ -38,8 +39,15 @@
 .title {
   font-size: var(--title-size);
   font-weight: 800;
+  margin-top: 12.5vh !important;
   font-style: italic;
   color: var(--primary-color);
   text-shadow: 0 0 10px var(--primary-color);
   margin-bottom: 0;
+}
+
+.heart-button {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
 }

@@ -5,7 +5,6 @@ import '../styles/users.css'
 
 function UserList(props) {
     const {users} = props;
-    console.log(users)
     const renderedUsers = users.map(user => <User {...user}/>)
     return (
         <div className='users'>

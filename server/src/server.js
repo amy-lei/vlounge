@@ -4,9 +4,9 @@ const bodyParser = require("body-parser");
 const http = require('http');
 const cors = require('cors');
 const api = require('./api.js');
-const User = require("./User");
-
 const socket = require('./server-socket');
+const User = require('./User.js');
+const Room = require('./Room.js');
 require("dotenv").config();
 
 const app = express();
@@ -38,20 +38,25 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(`${err}: Failed to connect to MongoDB`));
 
-// console.log that your server is up and running
 const server = http.createServer(app);
 socket.init(server);
 app.io = socket.getIo();
-// const io = socket(server);
-// io.on("connection", (socket) => {
-//     console.log("new connection");
-// });
-// app.io = io;
 
-// create a GET route
 app.get('/', (req, res) => {
     res.send("Hello world");
 });
+
+app.get('/clear-db', async (req, res) => {
+    const r = await Room.find();
+    if (r.length === 0) {
+        console.log('created new room');
+        const newRoom = new Room();
+        await newRoom.save();
+    }
+    await User.deleteMany();
+    res.send("Deleted db");
+});
+
 server.listen(port, () => {
     console.log('listening on *:5000');
 });
