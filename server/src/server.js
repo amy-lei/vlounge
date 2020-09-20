@@ -44,6 +44,12 @@ app.io = socket.getIo();
 app.get('/', (req, res) => {
     res.send("Hello world");
 });
+
+app.get('/clear-db', async (req, res) => {
+    await User.deleteMany();
+    res.send("Deleted db");
+});
+
 server.listen(port, () => {
     console.log('listening on *:5000');
 });
