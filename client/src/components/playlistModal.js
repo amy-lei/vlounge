@@ -4,7 +4,9 @@ import { Button, Header, Image, Modal, Input, Icon } from 'semantic-ui-react';
 import SearchResults from "./searchResults"
 
 function PlaylistModal() {
-    const URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&&key=AIzaSyA7hHykojvvVc7xnpC4Sl_sPDhDCA40cdQ&q=";
+    const GET_URL = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&&key=AIzaSyA7hHykojvvVc7xnpC4Sl_sPDhDCA40cdQ&q=";
+    const POST_URL = "https://www.googleapis.com/youtube/v3/playlistItems?key=AIzaSyA7hHykojvvVc7xnpC4Sl_sPDhDCA40cdQ"
+    const PLAYLIST_ID = "PLiV4rmppLa4bsAEhAxBgUF8oc7gtDfp0z";
 
     const [open, setOpen] = useState(false);
     const [readySearch, setReadySearch] = useState(false);
@@ -25,7 +27,7 @@ function PlaylistModal() {
         const query = e.target.value.trim();
         const getVideos = async (query) => {
             console.log("now in async, searching for " + query);
-            const res = await fetch(URL+query, {
+            const res = await fetch(GET_URL+query, {
                 method: "GET",
                 headers: {'Accept': 'application/json'},
             });
@@ -51,6 +53,38 @@ function PlaylistModal() {
       setReadySubmit(true);
     }
 
+    const addVideo = async () => {
+        console.log("in add video");
+        fetch(POST_URL, {
+            method: "POST",
+            headers: { 'Accept': 'application/json',
+                       'Authorization': 'Bearer 888670714689-hu29fem6najhk9h8b97i9tic407b7suc.apps.googleusercontent.com',
+                       'Content-Type': 'application/json' },
+            body: {
+                "snippet": {
+                    "playlistId": PLAYLIST_ID,
+                    "position": 0,
+                    "resourceId": {
+                        "kind": "youtube#video",
+                        "videoId": searchResults[index].id
+                    }
+                }
+            }
+        })
+            .then(response => {
+                console.log("RESPONSE: ", response.json());
+            })
+            .then(data => {
+                console.log("SUCCESS DATA: ", data);
+                setOpen(false);
+            })
+            .catch(error => {
+                console.error("ERROR: ", error);
+                setOpen(false);
+            });
+    }
+    
+
     return (
         <Modal
             onOpen={() => setOpen(true)}
@@ -72,7 +106,10 @@ function PlaylistModal() {
                 <Icon name="search" />
               </Input>
             </form>
-            <SearchResults results={searchResults} index={index} setIndex={selectVideo}/>
+            <SearchResults results={searchResults}
+                           index={index}
+                           setIndex={selectVideo}
+            />
           </Modal.Content>
           <Modal.Actions>
             <Button color='black'
@@ -83,7 +120,7 @@ function PlaylistModal() {
                 content="Add"
                 labelPosition='right'
                 icon='checkmark'
-                onClick={() => setOpen(false)}
+                onClick={() => addVideo()}
                 positive
                 disabled={!readySubmit}
             />
