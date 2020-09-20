@@ -1,7 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
-const User = require("./User");
+const http = require('http');
+const cors = require('cors');
+const api = require('./api.js');
+
 const socket = require('socket.io');
 require("dotenv").config();
 
@@ -11,6 +14,16 @@ MONGO_URI = process.env.MONGO_URI
 
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(bodyParser.json());
+app.use(bodyParser.json({ type: "text/*" }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.options('*', cors());
+app.use("/api", api);
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+});
 
 // connect to database
 mongoose
@@ -25,40 +38,17 @@ mongoose
   .catch((err) => console.log(`${err}: Failed to connect to MongoDB`));
 
 // console.log that your server is up and running
-const server = app.listen(port, () => console.log(`Listening on port ${port}`));
+const server = http.createServer(app);
 const io = socket(server);
 io.on("connection", (socket) => {
-    console.log('Made a connection');
+    console.log("new connection");
 });
-
 app.io = io;
-app.post('/api/users', (req, res) => {
-    // Create uniquely named user
-    let name = req.body.name;
-    console.log(name);
-    while (true) {
-        const userInDb = User.findOne({name});
-        if (!userInDb) {
-            break;
-        }
-        name = name + Math.floor(Math.random() * 10).toString();
-    }
-    user = new User({name});
-
-    // Return all users and emit as a socket event
-    user.save()
-        .then((u) => {
-            User.find({})
-                .then(allUser => {
-                    console.log(allUser);
-                    req.app.io.emit('newUserList', {allUser});
-                    res.send({allUser, name});
-                });
-        });
-    res.send({});
-});
 
 // create a GET route
 app.get('/', (req, res) => {
-  res.send("Hello world");
+    res.send("Hello world");
+});
+server.listen(port, () => {
+    console.log('listening on *:5000');
 });

@@ -65,15 +65,17 @@ function App() {
   }
 
   useEffect(() => {
-    const fetchAllUsers = async () => {
+    const initUser = async () => {
       const allUsers = await fetch('http://localhost:5000/api/users', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({name}),
       });
-      setAllUsers(allUsers);
+      const uniqueName = await allUsers.json();
+      console.log(uniqueName);
+      setName(uniqueName.name);
     }
-    fetchAllUsers();
+    initUser();
   }, []);
 
   useEffect(() => {
@@ -82,7 +84,7 @@ function App() {
   }, [isFlagged]);
 
   useEffect(() => {
-    socket.on('newUserList', data => console.log(data));
+    socket.on('newUser', data => console.log(data));
   });
 
     console.log("final list")
