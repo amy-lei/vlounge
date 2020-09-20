@@ -39,7 +39,7 @@
 .title {
   font-size: var(--title-size);
   font-weight: 800;
-  margin-top: 12.5vh !important;
+  margin-top: 8.5vh !important;
   font-style: italic;
   color: var(--primary-color);
   text-shadow: 0 0 10px var(--primary-color);
@@ -53,12 +53,17 @@
 }
 
 .search-result {
+    cursor: pointer;
     display: flex;
     flex-direction: row;
     padding: 10px 20px;
     border: 1px solid black;
     border-radius: 3px;
     margin: 5px 0px;
+}
+
+.search-result.active {
+  background-color: grey;
 }
 
 .search-result:first-of-type {

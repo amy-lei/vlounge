@@ -11,7 +11,8 @@ function PlaylistModal() {
     const [readySubmit, setReadySubmit] = useState(false);
     const [textInput, setTextInput] = useState("");
     const [searchResults, setSearchResults] = useState([]);
-    
+    const [index, setIndex] = useState(null);
+
     useEffect(() => {
         console.log(textInput.length);
         if (textInput.length === 0) { setReadySearch(false); }
@@ -45,6 +46,11 @@ function PlaylistModal() {
         setSearchResults(parsed);
     }
     
+    const selectVideo = (i) => {
+      setIndex(i);
+      setReadySubmit(true);
+    }
+
     return (
         <Modal
             onOpen={() => setOpen(true)}
@@ -66,7 +72,7 @@ function PlaylistModal() {
                 <Icon name="search" />
               </Input>
             </form>
-            <SearchResults results={searchResults} />
+            <SearchResults results={searchResults} index={index} setIndex={selectVideo}/>
           </Modal.Content>
           <Modal.Actions>
             <Button color='black'
