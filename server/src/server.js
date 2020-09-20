@@ -4,8 +4,6 @@ const bodyParser = require("body-parser");
 const http = require('http');
 const cors = require('cors');
 const api = require('./api.js');
-const User = require("./User");
-
 const socket = require('./server-socket');
 const User = require('./User.js');
 require("dotenv").config();

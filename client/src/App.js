@@ -16,12 +16,9 @@ const socket = socketIOClient(`${endpoint}`);
 
 function App() {
   // TODO: change default to false and set when enough people
-  let [allUsers, setAllUsers] = useState([]);
   let [showNotification, setShowNotification] = useState(true);
   let [isFlagged, setIsFlagged] = useState(false);
-  let [userList, setUserList] = useState([ 
-    //{name: "test person", is_flagged: false}
-  ]);
+  let [userList, setUserList] = useState([]);
 
   const initialName = useMemo(generate_name);
   let [name, setName] = useState(
@@ -39,6 +36,10 @@ function App() {
       }
   }
 
+  /**
+   * On initial load, fetch all current users and update name to be one that
+   * doesn't conflict
+   */
   useEffect(() => {
     socket.on('connect', () => {
       const initUser = async () => {
@@ -48,48 +49,41 @@ function App() {
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(body),
         });
-        const uniqueName = await allUsers.json();
-        console.log(uniqueName);
-        setName(uniqueName.name);
+        const res = await allUsers.json();
+        setName(res.name);
+        setUserList(res.allUsers);
       }
       initUser();
     });
   }, []);
 
-  useEffect(() => {
-    socket.emit("toggleFlag", name);
-    console.log("emit toggleFlag");
-    console.log(name);
-  }, [isFlagged]);
-
-  async function updateUsers1(data){
-      console.log(data)
-      allUsers = data.allUsers
-      var updatedList = [];
-      for (var user of allUsers) {
-        updatedList.push(user);
-      }
-      setUserList(updatedList);
+  /**
+   * Toggle status of flag and send to backend to be emitted and updated
+   */
+  const toggleFlag = async () => {
+    setIsFlagged(!isFlagged);
+    const body = {name};
+    const allUsers = await fetch('http://localhost:5000/api/flag', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    });
+    await allUsers.json();
   }
 
-  async function updateUsers2(data){
-      console.log(data)
-      allUsers = data
-      var updatedList = [];
-      for (var user of allUsers) {
-        updatedList.push(user);
-      }
-      setUserList(updatedList);
-  }
-
-
+  /**
+   * Update userlist when someone flags, changes name or leaves
+   */
   useEffect(() => {
-    socket.on('newUser', data => updateUsers1(data));
-    socket.on('updateUsers', data => updateUsers2(data));
+    socket.on('updateUsers', allUsers => {
+      setUserList(allUsers);
+    });
+
+    socket.on('userLeft', username => {
+      const updatedList = userList.filter(u => u.name !== username);
+      setUserList(updatedList);
+    });
   });
-
-    //console.log("final list")
-    //console.log(userList)
 
   return (
     <div className='app'>
@@ -114,7 +108,7 @@ function App() {
             </div>    
             <Button 
               className='flag-button'
-              onClick={() => setIsFlagged(!isFlagged)}
+              onClick={toggleFlag}
             >
               <Icon name={buttonValues[isFlagged].icon}/>
               {buttonValues[isFlagged].text}

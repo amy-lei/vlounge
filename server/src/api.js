@@ -17,10 +17,23 @@ router.post('/users', async (req, res) => {
         const u = await user.save();
         const allUsers = await User.find();
         socket.addUser(req.body.socketId, name);
-        socket.getIo().emit('newUser', {user: u, allUsers});
+        socket.getIo().sockets.emit('updateUsers', allUsers);
         res.send({name, allUsers});
     } catch (err) {
         console.log(err);
+    }
+});
+
+router.post('/flag', async (req, res) => {
+    try {
+        const allUsers = await User.find();
+        const target = allUsers.find(u => u.name === req.body.name);
+        target.is_flagged = !target.is_flagged;
+        await target.save();
+        socket.getIo().sockets.emit('updateUsers', allUsers);
+        res.send({allUsers});
+    } catch (err) {
+        console.log(`error from toggling flag: ${err}`);
     }
 });
 

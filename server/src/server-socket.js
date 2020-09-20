@@ -22,28 +22,11 @@ module.exports = {
                     console.log(`${name} disconnected`);
     
                     const deletedUser = await User.deleteOne({name});
-                    io.emit('userLeft', {user: deletedUser});
+                    io.sockets.emit('userLeft', name);
                     removeUser(socket.id);
                 } catch (err) {
                     console.log(`error from deleting: ${err}`);
                 }
-            });
-            socket.on("nameChange", (data) => {
-                // toggle flag on user, tell al clients to update lists
-                    
-                // check number of people with flags toggled
-            });
-
-            socket.on("toggleFlag", async (name) => {
-                // toggle flag on user, tell al clients to update lists
-                console.log("server: logging")
-                console.log(name)
-                const toggleUser = await User.findOne({name}); 
-                toggleUser.is_flagged = !toggleUser.is_flagged 
-                const toggled = await toggleUser.save();
-                const allUsers = await User.find();
-                socket.emit("updateUsers", allUsers)
-                // check number of people with flags toggled
             });
         });
     },
