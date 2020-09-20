@@ -1,3 +1,5 @@
+<img src="./ex.png">
+
 # vlounge
 
 Miss being on campus together with your friends? Here is a virtual lounge experience with asynchronous elements to fill that void!
@@ -10,3 +12,8 @@ Get that in-person lounge feeling with a collaborative playlist you can add to a
 
 ## asynchronous :heart:s
 Living in a different timezone from your friends? You can still drop by the lounge to leave your friends a couple :heart:s for them to pick up -- and they can leave some for you as well!
+
+## Built by:
+- [Amy Lei](https://github.com/amy-lei)
+- [Hanna Yang](https://github.com/hanna-yang)
+- [Raymond Wu](https://github.com/wu-rymd)
