@@ -32,7 +32,10 @@ function App() {
    */
   const saveName = async (e) => {
       let name = e.target.value;
-      if (e.target.value === '') {
+      if (name === formerName) {
+        return;
+      }
+      if (name === '') {
           name = initialName;
       }
       const body = {formerName, name};
