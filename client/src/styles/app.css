@@ -45,3 +45,9 @@
   text-shadow: 0 0 10px var(--primary-color);
   margin-bottom: 0;
 }
+
+.heart-button {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+}

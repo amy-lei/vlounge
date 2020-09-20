@@ -31,14 +31,14 @@
     color: var(--accent-color);
 }
 
-.flag-button {
+.btn {
     color: var(--font-color) !important;
     border-radius: 50rem !important;
     background-color: var(--background-color-dark) !important;
 }
 
-.flag-button:focus,
-.flag-button:hover {
+.btn:focus,
+.btn:hover {
     background-color: var(--background-color-dark-hover) !important;
 }
 
@@ -79,6 +79,11 @@ label {
 
 .player-container {
     width: 100%;
+}
+
+.heart-button i,
+.heart-button {
+    color: var(--primary-color) !important;
 }
 
 @media (max-width: 700px) {

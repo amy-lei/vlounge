@@ -25,6 +25,20 @@ function App() {
     localStorage.getItem('displayName') || initialName
     );
   let [formerName, setFormerName] = useState(name);
+  let [count, setCount] = useState(0);
+  let [numHearts, setNumHearts] = useState(0);
+  let [inputTimer, setInputTimer] = useState(null);
+
+  const heartReact = async () => {
+    const delay = 3000;
+    setCount(count + 1);
+    setNumHearts(numHearts + 1);
+    clearTimeout(inputTimer);
+    setInputTimer(setTimeout(()=>{
+      console.log(`You hearted ${count} times!`);
+      setCount(0);
+  }, delay));
+  }
 
   /**
    * When the user clicks outside of the input, save name into the local storage
@@ -127,7 +141,7 @@ function App() {
               />
             </div>    
             <Button 
-              className={`flag-button ${isFlagged ? 'outline':''}`}
+              className={`btn flag-button ${isFlagged ? 'outline':''}`}
               onClick={toggleFlag}
             >
               <Icon name={buttonValues[isFlagged].icon}/>
@@ -142,6 +156,14 @@ function App() {
             setShowNotification={setShowNotification}
           />
         }
+        <Button
+          circular
+          className='heart-button btn'
+          onClick={heartReact}
+        >
+          <Icon name='heart'/>
+          {numHearts}
+        </Button>
       </div>
     </div>
   );
