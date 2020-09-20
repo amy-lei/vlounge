@@ -5,7 +5,7 @@ const http = require('http');
 const cors = require('cors');
 const api = require('./api.js');
 
-const socket = require('socket.io');
+const socket = require('./server-socket');
 require("dotenv").config();
 
 const app = express();
@@ -39,11 +39,13 @@ mongoose
 
 // console.log that your server is up and running
 const server = http.createServer(app);
-const io = socket(server);
-io.on("connection", (socket) => {
-    console.log("new connection");
-});
-app.io = io;
+socket.init(server);
+app.io = socket.getIo();
+// const io = socket(server);
+// io.on("connection", (socket) => {
+//     console.log("new connection");
+// });
+// app.io = io;
 
 // create a GET route
 app.get('/', (req, res) => {

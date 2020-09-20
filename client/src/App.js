@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import UserList from './components/userlist';
 import Notification from './components/notification';
 import Player from './components/player';
-import io from "socket.io-client";
+import socketIOClient from "socket.io-client";
 import {generate_name} from './word-list';
 import {Icon, Button, Input} from 'semantic-ui-react';
 import {buttonValues} from './constants';
@@ -12,7 +12,7 @@ import 'semantic-ui-css/semantic.min.css'
 
 // connecting to server
 let endpoint = "http://localhost:5000";
-let socket = io.connect(`${endpoint}`);
+const socket = socketIOClient(`${endpoint}`);
 
 function App() {
   // TODO: change default to false and set when enough people
@@ -23,31 +23,31 @@ function App() {
     {name: "test person", is_flagged: false}
   ]);
 
-    socket.on("justConnected", (data) => {
-        var tempList = [];
-        for (var user of data) {
-            tempList.push(JSON.parse(user));
-        }
-        setUserList(tempList);
-        console.log("got list of users");
-        console.log(userList);
-    });
+  socket.on("justConnected", (data) => {
+      var tempList = [];
+      for (var user of data) {
+          tempList.push(JSON.parse(user));
+      }
+      setUserList(tempList);
+      console.log("got list of users");
+      console.log(userList);
+  });
 
-    socket.on("updateUser", (data) => {
-        var userToUpdate = JSON.parse(data);
-        var newUser = 1;
-        for (let i = 0; i < userList.length; i++) {
-            var user = userList[i];
-            if (user.name == userToUpdate.name) {
-                userList[i] = userToUpdate
-                setUserList(userList);
-                newUser = 0;
-            }
-        }
-        if (newUser == 1) {
-            setUserList((prev_state) => prev_state.concat([userToUpdate]));
-        }
-    });
+  socket.on("updateUser", (data) => {
+      var userToUpdate = JSON.parse(data);
+      var newUser = 1;
+      for (let i = 0; i < userList.length; i++) {
+          var user = userList[i];
+          if (user.name == userToUpdate.name) {
+              userList[i] = userToUpdate
+              setUserList(userList);
+              newUser = 0;
+          }
+      }
+      if (newUser == 1) {
+          setUserList((prev_state) => prev_state.concat([userToUpdate]));
+      }
+  });
 
   const initialName = useMemo(generate_name);
   let [name, setName] = useState(
@@ -66,17 +66,20 @@ function App() {
   }
 
   useEffect(() => {
-    const initUser = async () => {
-      const allUsers = await fetch('http://localhost:5000/api/users', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({name}),
-      });
-      const uniqueName = await allUsers.json();
-      console.log(uniqueName);
-      setName(uniqueName.name);
-    }
-    initUser();
+    socket.on('connect', () => {
+      const initUser = async () => {
+        const body = {name, socketId: socket.id};
+        const allUsers = await fetch('http://localhost:5000/api/users', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(body),
+        });
+        const uniqueName = await allUsers.json();
+        console.log(uniqueName);
+        setName(uniqueName.name);
+      }
+      initUser();
+    });
   }, []);
 
   useEffect(() => {
