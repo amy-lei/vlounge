@@ -44,16 +44,6 @@ module.exports = {
             //     const allUsers = await User.find();
             //     socket.emit("updateUsers", allUsers)
             //     // check number of people with flags toggled
-            //     flags_up = 0 
-            //     for (user in allUsers) {
-            //         if (user.is_flagged) {
-            //             flags_up += 1
-            //         }
-            //     }
-            //     if (flags_up > 1) {
-            //         socket.getIO().sockets.emit("makeRoom", flags_up)
-            //     }
-
             // });
         });
     },

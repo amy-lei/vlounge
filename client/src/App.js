@@ -16,7 +16,7 @@ const socket = socketIOClient(`${endpoint}`);
 
 function App() {
   // TODO: change default to false and set when enough people
-  let [showNotification, setShowNotification] = useState(true);
+  let [showNotification, setShowNotification] = useState(false);
   let [isFlagged, setIsFlagged] = useState(false);
   let [userList, setUserList] = useState([]);
 
@@ -78,9 +78,11 @@ function App() {
     socket.on('updateUsers', allUsers => {
       setUserList(allUsers);
     });
-  //   socket.on('newUser', data => updateUsers(data));
-  //   socket.on('updateUsers', data => updateUsers(data));
-  //   socket.on('makeRoom', data => console.log(data));
+
+    socket.on('makeRoom', numFlagged => {
+      setShowNotification(true)
+      //console.log(numFlagged);
+    });
 
     socket.on('userLeft', username => {
       const updatedList = userList.filter(u => u.name !== username);

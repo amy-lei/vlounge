@@ -32,6 +32,15 @@ router.post('/flag', async (req, res) => {
         await target.save();
         socket.getIo().sockets.emit('updateUsers', allUsers);
         res.send({allUsers});
+        flags_up = 0;
+        for (user of allUsers) {
+            if (user.is_flagged) {
+                flags_up += 1;
+            }
+        }
+        if (flags_up > 1) {
+            socket.getIo().sockets.emit("makeRoom", flags_up);
+        }
     } catch (err) {
         console.log(`error from toggling flag: ${err}`);
     }
