@@ -17,12 +17,16 @@ module.exports = {
         io = require("socket.io")(http);
         io.on('connection', socket => {
             socket.on('disconnect', async (reason) => {
-                const name = socketToUser[socket.id];
-                console.log(`${name} disconnected`);
-
-                const deletedUser = await User.deleteOne({name});
-                io.emit('userLeft', {user: deletedUser});
-                removeUser(socket.id);
+                try {
+                    const name = socketToUser[socket.id];
+                    console.log(`${name} disconnected`);
+    
+                    const deletedUser = await User.deleteOne({name});
+                    io.emit('userLeft', {user: deletedUser});
+                    removeUser(socket.id);
+                } catch (err) {
+                    console.log(`error from deleting: ${err}`);
+                }
             });
         });
     },

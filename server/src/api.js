@@ -16,7 +16,6 @@ router.post('/users', async (req, res) => {
         // Return all users and emit as a socket event
         const u = await user.save();
         const allUsers = await User.find();
-        console.log(req.body)
         socket.addUser(req.body.socketId, name);
         socket.getIo().emit('newUser', {user: u, allUsers});
         res.send({name, allUsers});

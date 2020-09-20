@@ -6,6 +6,7 @@ const cors = require('cors');
 const api = require('./api.js');
 
 const socket = require('./server-socket');
+const User = require('./User.js');
 require("dotenv").config();
 
 const app = express();
@@ -37,17 +38,10 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(`${err}: Failed to connect to MongoDB`));
 
-// console.log that your server is up and running
 const server = http.createServer(app);
 socket.init(server);
 app.io = socket.getIo();
-// const io = socket(server);
-// io.on("connection", (socket) => {
-//     console.log("new connection");
-// });
-// app.io = io;
 
-// create a GET route
 app.get('/', (req, res) => {
     res.send("Hello world");
 });
