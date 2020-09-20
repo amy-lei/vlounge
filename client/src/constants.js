@@ -11,3 +11,12 @@ export const buttonValues = {
         icon: "hand point down"
     },
 };
+
+export const heartValues = {
+    false: {
+        text: "Feeling down? :(",
+    },
+    true: {
+        text: "Have a heart! :)",
+    },
+};

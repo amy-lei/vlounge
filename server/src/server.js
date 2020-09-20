@@ -47,11 +47,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/clear-db', async (req, res) => {
-    const r = await Room.find();
-    if (r.length === 0) {
+    const r = await Room.findOne();
+    if (!r) {
         console.log('created new room');
         const newRoom = new Room();
         await newRoom.save();
+    } else {
+        r.numHearts = 0;
+        await r.save();
     }
     await User.deleteMany();
     res.send("Deleted db");

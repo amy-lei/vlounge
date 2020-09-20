@@ -10,6 +10,7 @@ router.post('/users', async (req, res) => {
         // Create uniquely named user
         let name = req.body.name;
         const userInDb = await User.findOne({name});
+        const oneRoom = await Room.findOne();
         if (userInDb) {
             name = name + Math.floor(Math.random() * 100).toString();
         }
@@ -19,7 +20,7 @@ router.post('/users', async (req, res) => {
         const allUsers = await User.find();
         socket.addUser(req.body.socketId, name);
         socket.getIo().sockets.emit('updateUsers', allUsers);
-        res.send({name, allUsers});
+        res.send({name, allUsers, numHearts: oneRoom.numHearts});
     } catch (err) {
         console.log(err);
     }

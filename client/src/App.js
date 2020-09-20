@@ -5,7 +5,7 @@ import Player from './components/player';
 import socketIOClient from "socket.io-client";
 import {generate_name} from './word-list';
 import {Icon, Button, Input} from 'semantic-ui-react';
-import {buttonValues} from './constants';
+import {buttonValues, heartValues} from './constants';
 
 import './styles/app.css';
 import 'semantic-ui-css/semantic.min.css'
@@ -19,6 +19,7 @@ function App() {
   let [showNotification, setShowNotification] = useState(false);
   let [isFlagged, setIsFlagged] = useState(false);
   let [userList, setUserList] = useState([]);
+  let [tookHeart, setTookHeart] = useState(false);
 
   const initialName = useMemo(generate_name);
   let [name, setName] = useState(
@@ -28,7 +29,26 @@ function App() {
   let [count, setCount] = useState(0);
   let [numHearts, setNumHearts] = useState(0);
   let [inputTimer, setInputTimer] = useState(null);
+  
+  /**
+   * Increment hearts as many times as user wants, and send to backend after a pause
+   */
+  const takeHeart = async () => {
+    const body = {numHearts: -1};
+    const res = await fetch('http://localhost:5000/api/hearts', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    });
+    console.log(`Took a heart!`)
+    const newNum = await res.json();
+    setNumHearts(numHearts - 1);
+    setTookHeart(true);
+  }
 
+  /**
+   * Increment hearts as many times as user wants, and send to backend after a pause
+   */
   const heartReact = () => {
     const delay = 3000;
     setCount(count + 1);
@@ -86,6 +106,7 @@ function App() {
         const res = await allUsers.json();
         setName(res.name);
         setUserList(res.allUsers);
+        setNumHearts(res.numHearts);
       }
       initUser();
     });
@@ -163,14 +184,26 @@ function App() {
             setShowNotification={setShowNotification}
           />
         }
-        <Button
-          circular
-          className='heart-button btn'
-          onClick={heartReact}
-        >
-          <Icon name='heart'/>
-          {numHearts}
-        </Button>
+        <div class='heart-container'>
+          <Button
+            circular
+            className='heart-button btn'
+            onClick={heartReact}
+          >
+            <Icon name='heart'/>
+            {numHearts}
+          </Button>
+          { numHearts > 0 && (
+            <Button
+              circular
+              className='heart-button btn'
+              disabled={tookHeart}
+              onClick={takeHeart}
+            >
+              {heartValues[tookHeart].text}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
