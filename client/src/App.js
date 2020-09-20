@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import UserList from './components/userlist';
 import Notification from './components/notification';
 import Player from './components/player';
-import io from "socket.io-client";
+import socketIOClient from "socket.io-client";
 import {generate_name} from './word-list';
 import {Icon, Button, Input} from 'semantic-ui-react';
 import {buttonValues} from './constants';
@@ -12,7 +12,7 @@ import 'semantic-ui-css/semantic.min.css'
 
 // connecting to server
 let endpoint = "http://localhost:5000";
-let socket = io.connect(`${endpoint}`);
+const socket = socketIOClient(`${endpoint}`);
 
 function App() {
   // TODO: change default to false and set when enough people
@@ -22,7 +22,6 @@ function App() {
   let [userList, setUserList] = useState([ 
     {name: "test person", is_flagged: false}
   ]);
-
 
   const initialName = useMemo(generate_name);
   let [name, setName] = useState(
@@ -41,17 +40,20 @@ function App() {
   }
 
   useEffect(() => {
-    const initUser = async () => {
-      const allUsers = await fetch('http://localhost:5000/api/users', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({name}),
-      });
-      const uniqueName = await allUsers.json();
-      console.log(uniqueName);
-      setName(uniqueName.name);
-    }
-    initUser();
+    socket.on('connect', () => {
+      const initUser = async () => {
+        const body = {name, socketId: socket.id};
+        const allUsers = await fetch('http://localhost:5000/api/users', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(body),
+        });
+        const uniqueName = await allUsers.json();
+        console.log(uniqueName);
+        setName(uniqueName.name);
+      }
+      initUser();
+    });
   }, []);
 
   useEffect(() => {
