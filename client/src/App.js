@@ -22,18 +22,31 @@ function App() {
 
   const initialName = useMemo(generate_name);
   let [name, setName] = useState(
-      localStorage.getItem('displayName') || initialName
-  );
+    localStorage.getItem('displayName') || initialName
+    );
+  let [formerName, setFormerName] = useState(name);
 
   /**
    * When the user clicks outside of the input, save name into the local storage
    * and update the database accordingly
    */
-  const saveName = (e) => {
-      if (e.target.value === '') {
-          setName(initialName);
-          return;
+  const saveName = async (e) => {
+      let name = e.target.value;
+      if (name === formerName) {
+        return;
       }
+      if (name === '') {
+          name = initialName;
+      }
+      const body = {formerName, name};
+      const allUsers = await fetch('http://localhost:5000/api/name', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+      });
+      const res = await allUsers.json();
+      setName(res.name);
+      setFormerName(res.name);
   }
 
   /**

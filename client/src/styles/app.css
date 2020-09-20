@@ -19,7 +19,7 @@
 
 .app {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
   background-color: var(--background-color);
   overflow: hidden;
@@ -38,6 +38,7 @@
 .title {
   font-size: var(--title-size);
   font-weight: 800;
+  margin-top: 12.5vh !important;
   font-style: italic;
   color: var(--primary-color);
   text-shadow: 0 0 10px var(--primary-color);
