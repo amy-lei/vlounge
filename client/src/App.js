@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import UserList from './components/userlist';
 import Notification from './components/notification';
+import Player from './components/player';
 import io from "socket.io-client";
 import {generate_name} from './word-list';
 import {Icon, Button, Input} from 'semantic-ui-react';
@@ -118,6 +119,7 @@ function App() {
             </Button>
           </div>
           <UserList users={userList}/>
+          <Player/>
         </section>
         { showNotification &&
           <Notification 

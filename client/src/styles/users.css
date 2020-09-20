@@ -43,6 +43,7 @@
 
 
 .name input{
+    position: relative;
     width: inherit;
     background-color: transparent !important;
     margin-right: 1rem;
@@ -57,4 +58,8 @@
 
 label {
     opacity: 0.75;
+}
+
+.player-container {
+    width: 100%;
 }
