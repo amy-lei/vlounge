@@ -37,4 +37,22 @@ router.post('/flag', async (req, res) => {
     }
 });
 
+router.post('/name', async (req, res) => {
+    try {
+        let name = req.body.name;
+        const allUsers = await User.find();
+        const target = allUsers.find(u => u.name === req.body.formerName);
+        const dupe = allUsers.find(u => u.name === name);
+        if (dupe) {
+            name = name + Math.floor(Math.random() * 100).toString();
+        }
+        target.name = name;
+        await target.save();
+        socket.getIo().sockets.emit('updateUsers', allUsers);
+        res.send({name});
+    } catch (err) {
+        console.log(`error from changing names: ${err}`);
+    }
+});
+
 module.exports = router;

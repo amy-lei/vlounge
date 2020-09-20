@@ -28,12 +28,7 @@ module.exports = {
                     console.log(`error from deleting: ${err}`);
                 }
             });
-            socket.on("nameChange", (data) => {
-                // toggle flag on user, tell al clients to update lists
-                    
-                // check number of people with flags toggled
-            });
-
+            
             // socket.on("toggleFlag", async (name) => {
             //     // toggle flag on user, tell al clients to update lists
             //     console.log("server: logging")
